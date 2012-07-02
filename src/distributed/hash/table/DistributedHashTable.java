@@ -1,3 +1,5 @@
+package distributed.hash.table;
+
 import java.util.Hashtable;
 
 public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject implements IDistributedHashTable{

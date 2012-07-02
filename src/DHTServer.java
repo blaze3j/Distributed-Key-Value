@@ -3,6 +3,8 @@ import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
+import distributed.hash.table.DistributedHashTable;
+
 public class DHTServer {
 	public static void main(String[] args) {
 		if (System.getSecurityManager() == null) {

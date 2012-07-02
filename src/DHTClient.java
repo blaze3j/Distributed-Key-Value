@@ -1,5 +1,7 @@
 import java.rmi.Naming;
 
+import distributed.hash.table.*;
+
 public class DHTClient {
 	public static void main(String[] args) {
 		try { 

@@ -1,3 +1,5 @@
+package distributed.hash.table;
+
 public class Request implements IRequest{
 	private static final long serialVersionUID = 1L;
 	private int RequestId;

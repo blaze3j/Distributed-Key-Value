@@ -1,3 +1,5 @@
+package distributed.hash.table;
+
 import java.rmi.Remote;
 
 public interface IDistributedHashTable extends Remote {
