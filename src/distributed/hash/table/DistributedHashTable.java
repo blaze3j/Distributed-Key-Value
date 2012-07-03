@@ -5,11 +5,13 @@ import java.util.Hashtable;
 public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject implements IDistributedHashTable{
 	private static final long serialVersionUID = 1L;
 	private Hashtable<Integer, Object> cache;
+	private Hashtable<Integer, Integer> fTable;
 	int myId;
 	
-	public DistributedHashTable(int id) throws java.rmi.RemoteException {
+	public DistributedHashTable(int id, Hashtable<Integer, Integer> fingerTable) throws java.rmi.RemoteException {
         super(); 
 		this.cache = new Hashtable<Integer, Object>();
+		this.fTable = fingerTable;
 		this.myId = id;
 	}
 
