@@ -23,7 +23,7 @@ public class DHTServer {
 	        }
 		
 		try{
-			DistributedHashTable dhtServer = new DistributedHashTable();
+			DistributedHashTable dhtServer = new DistributedHashTable(1);
 			Naming.rebind("//localhost/DistributedHashTable", dhtServer);
             System.out.println("Distributed Hash server is running.");
 		}catch(Exception e){

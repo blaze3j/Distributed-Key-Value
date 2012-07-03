@@ -5,10 +5,13 @@ import java.util.Hashtable;
 public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject implements IDistributedHashTable{
 	private static final long serialVersionUID = 1L;
 	private Hashtable<Integer, Object> cache;
+	int myId;
 	
-	public DistributedHashTable() throws java.rmi.RemoteException {
+	public DistributedHashTable(int id) throws java.rmi.RemoteException {
         super(); 
-		this.cache = new Hashtable<Integer, Object>();	}
+		this.cache = new Hashtable<Integer, Object>();
+		this.myId = id;
+	}
 
 	public void insert(IRequest req){
 		this.cache.put(req.getKey(), req.getValue());
@@ -35,5 +38,9 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
 			this.cache.remove(req.getKey());
 			System.out.println(req.toString() + " deleted");
 		}
+	}
+	
+	public int getMax(){
+		return myId * 250000;
 	}
 }

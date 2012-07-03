@@ -14,4 +14,6 @@ public interface IDistributedHashTable extends Remote {
 			throws java.rmi.RemoteException;
 	public boolean contains(IRequest req)
 			throws java.rmi.RemoteException;
+	public int getMax()
+			throws java.rmi.RemoteException;
 }
