@@ -48,7 +48,7 @@ public class DHTServer {
 		int serverPort = sPortMap[serverId-1];
 		try { //special exception handler for registry creation
 			LocateRegistry.createRegistry(serverPort); 
-			System.out.println("java RMI registry created.");
+			System.out.println("java RMI registry created on port: " + serverPort);
 		} catch (RemoteException e) {
 		    //do nothing, error means registry already exists
 			System.out.println("java RMI registry already exists.");
@@ -59,7 +59,7 @@ public class DHTServer {
 		try{
 			DistributedHashTable dhtServer = new DistributedHashTable(serverId, fingerTable);
 			Naming.rebind("//localhost:"+serverPort+"/DistributedHashTable", dhtServer);
-            System.out.println("Distributed Hash server is running.");
+            System.out.println("Distributed Hash server on machine: " + serverId + " is running.");
 		}catch(Exception e){
 			System.out.println("dhtServer: " + e.getMessage());
 			e.printStackTrace();
