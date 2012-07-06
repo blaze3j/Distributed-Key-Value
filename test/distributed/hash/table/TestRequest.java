@@ -40,7 +40,7 @@ public class TestRequest {
      */
     @Test
     public void testInsertionLookup() {
-        try { 
+        try {
             IRequest req = new Request(1, mRequestId++, 1, 1);
             mDhtClientArray[0].insert(req);
             System.out.println("DHTClient insert: " + req.toString());
@@ -97,7 +97,7 @@ public class TestRequest {
 
     @Test
     public void testInsertionLoadbalance() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 12; i++) {
             try { 
                 IRequest req = new Request(1, mRequestId++, i, i);
                 mDhtClientArray[0].insert(req);
@@ -106,19 +106,14 @@ public class TestRequest {
                 System.out.println("dhtClient: " +  e.getMessage());
             }
         }
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 0; i < 4; i++) {
             try {
-                System.out.println("DHTClient get Count on machine id " + i + " is " + mDhtClientArray[i].count());
+                System.out.println("DHTClient get Count on machine id " + (i + 1) + " is " + mDhtClientArray[i].count());
+                assertTrue(3 == mDhtClientArray[i].count());
             } catch (RemoteException e) {
                 e.printStackTrace();
-                System.out.println("dhtClient: " +  e.getMessage());
+                System.out.println("dhtClient: " + e.getMessage());
             }
-
-            assertTrue(true);
-            //assertTrue();
-
-            
-            
         }
     }
 }
