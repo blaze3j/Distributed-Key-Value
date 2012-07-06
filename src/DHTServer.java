@@ -12,7 +12,7 @@ public class DHTServer {
 	
 	public static int[] sPortMap = {15555,15556,15557,15558};
 	public static void main(String[] args) {
-		GetOpt getopt = new GetOpt(args, "i:p:g:");
+	    GetOpt getopt = new GetOpt(args, "i:p:g:");
 		int serverId = -1;
 		int peerId1 = -1;
 		int peerId2 = -1;
@@ -31,9 +31,6 @@ public class DHTServer {
 			        break;
 			    }
 			}
-		} catch (IllegalArgumentException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
