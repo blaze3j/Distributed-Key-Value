@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
@@ -39,7 +40,7 @@ public class TestRequest {
      * Test method for {@link distributed.hash.table.Request#Request(int, int, int, java.lang.Object)}.
      */
     @Test
-    public void testInsertionLookup() {
+    public void testExperiment1() {
         try {
             IRequest req = new Request(1, mRequestId++, 1, 1);
             mDhtClientArray[0].insert(req);
@@ -64,56 +65,6 @@ public class TestRequest {
             assertTrue(intValue.intValue() == 2);
         }  catch(Exception e) {
             System.out.println("dhtClient: " +  e.getMessage());
-        }
-    }
-    
-    @Test
-    public void testInsertionLookupDifferentNodes() {
-        try { 
-            IRequest req = new Request(1, mRequestId++, 1, 'a');
-            mDhtClientArray[0].insert(req);
-            System.out.println("DHTClient insert: " + req.toString());
-
-            req = new Request(1, mRequestId++, 2, 'b');
-            mDhtClientArray[0].insert(req);
-            System.out.println("DHTClient insert: " + req.toString());
-
-            req = new Request(1, mRequestId++, 3, 'c');
-            mDhtClientArray[0].insert(req);
-            System.out.println("DHTClient insert: " + req.toString());
-
-            req = new Request(2, mRequestId++, 2, 0);
-            Object value = mDhtClientArray[1].lookup(req);
-            System.out.println("DHTClient lookup: " + value.toString());
-
-            System.out.println("DHTClient get Count on machine id 2 is " + mDhtClientArray[1].count());
-            
-            assertTrue(true);
-            //assertTrue();
-        }  catch(Exception e) {
-            System.out.println("dhtClient: " +  e.getMessage());
-        }
-    }
-
-    @Test
-    public void testInsertionLoadbalance() {
-        for (int i = 0; i < 12; i++) {
-            try { 
-                IRequest req = new Request(1, mRequestId++, i, i);
-                mDhtClientArray[0].insert(req);
-                System.out.println("DHTClient insert: " + req.toString());
-            }  catch(Exception e) {
-                System.out.println("dhtClient: " +  e.getMessage());
-            }
-        }
-        for (int i = 0; i < 4; i++) {
-            try {
-                System.out.println("DHTClient get Count on machine id " + (i + 1) + " is " + mDhtClientArray[i].count());
-                assertTrue(3 == mDhtClientArray[i].count());
-            } catch (RemoteException e) {
-                e.printStackTrace();
-                System.out.println("dhtClient: " + e.getMessage());
-            }
         }
     }
 }

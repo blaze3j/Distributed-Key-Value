@@ -60,6 +60,6 @@ public class DHTServer {
 		}catch(Exception e){
 			System.out.println("dhtServer: " + e.getMessage());
 			e.printStackTrace();
-		}      
+		}
 	}
 }

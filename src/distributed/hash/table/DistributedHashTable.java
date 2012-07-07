@@ -83,6 +83,10 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
 		}
 	}
 	
+	public void purge(){
+	    this.cache.clear();
+	}
+	
 	public int count(){
 		return this.cache.size();
 	}
