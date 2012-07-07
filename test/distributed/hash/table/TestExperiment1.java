@@ -61,8 +61,8 @@ public class TestExperiment1 {
             try {
                 int machineClientId = mRandom.nextInt(4);
                 int machineId = machineClientId + 1;
-                int keyId = mRandom.nextInt(1000000) + 1;
-                IRequest req = new Request(machineId, mRequestId++, keyId, 1);
+                int key = mRandom.nextInt(1000000) + 1;
+                IQueryRequest req = new QueryRequest(mRequestId++, machineId, key);
 
                 mStopwatch.start(); 
                 mDhtClientArray[machineClientId].lookup(req);

@@ -42,20 +42,20 @@ public class TestRequest {
     @Test
     public void testExperiment1() {
         try {
-            IRequest req = new Request(1, mRequestId++, 1, 1);
-            mDhtClientArray[0].insert(req);
-            System.out.println("DHTClient insert: " + req.toString());
+            IInsertRequest iReq = new InsertRequest(mRequestId++, 1, 1, 1);
+            mDhtClientArray[0].insert(iReq);
+            System.out.println("DHTClient insert: " + iReq.toString());
 
-            req = new Request(1, mRequestId++, 2, 2);
-            mDhtClientArray[0].insert(req);
-            System.out.println("DHTClient insert: " + req.toString());
+            iReq = new InsertRequest(mRequestId++, 3, 2, 2);
+            mDhtClientArray[2].insert(iReq);
+            System.out.println("DHTClient insert: " + iReq.toString());
 
-            req = new Request(1, mRequestId++, 3, 3);
-            mDhtClientArray[0].insert(req);
-            System.out.println("DHTClient insert: " + req.toString());
+            iReq = new InsertRequest(mRequestId++, 4, 982345, 756321);
+            mDhtClientArray[3].insert(iReq);
+            System.out.println("DHTClient insert: " + iReq.toString());
 
-            req = new Request(1, mRequestId++, 2, 0);
-            Object value = mDhtClientArray[0].lookup(req);
+            IQueryRequest qReq = new QueryRequest(mRequestId++, 4, 2);
+            Object value = mDhtClientArray[3].lookup(qReq);
             System.out.println("DHTClient lookup: " + value.toString());
 
             System.out.println("DHTClient get Count on machine id 1 is " + mDhtClientArray[0].count());

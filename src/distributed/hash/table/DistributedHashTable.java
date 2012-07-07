@@ -26,16 +26,17 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
 		System.out.println();
 	}
 
-	public void insert(IRequest req){
-		int machineId = getMachineIdToInsert(req.getKey());
+	public void insert(IInsertRequest req){
+		int machineId = getMachineId(req.getKey());
 		if(machineId == this.myId){
 			this.cache.put(req.getKey(), req.getValue());
-			System.out.println( "Machine " + this.myId + " inserted: " + req.toString());
+			System.out.println( "insert: machine " + this.myId + " - " + req.toString() + " is inserted");
 		}
 		else{
 			try { 
 				IDistributedHashTable dhtNextMachine = (IDistributedHashTable) 
 	    			Naming.lookup("rmi://localhost:"+ (Integer)this.fTable.get(machineId) +"/DistributedHashTable");
+				System.out.println( "insert: machine " + this.myId + " - " + req.toString() + " routed to machine " + machineId);
 				dhtNextMachine.insert(req);
 			}  catch(Exception e) {
 				System.out.println("MachineId " + this.myId + " : dhtNextMachine: " +  e.getMessage());
@@ -43,41 +44,49 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
 		}
 	}
 	
-	public Object lookup(IRequest req){
-		int machineId = getMachineIdToInsert(req.getKey());
+	public Object lookup(IQueryRequest req){
+		int machineId = getMachineId(req.getKey());
 		if(machineId == this.myId){
-			System.out.println( "Machine " + this.myId + " lookup: " + req.toString());
 			if(this.cache.containsKey(req.getKey())){
-				return this.cache.get(req.getKey());
+				Object value = this.cache.get(req.getKey());
+				System.out.println( "lookup: machine " + this.myId + " - value of " + req.toString() + " is " + value);
+				return value;
 			}
+			System.out.println( "lookup: machine " + this.myId + " - value of " + req.toString() + " not found.");	
 			return null;
 		}
 		else{
 			try { 
 				IDistributedHashTable dhtNextMachine = (IDistributedHashTable) 
 	    			Naming.lookup("rmi://localhost:"+ (Integer)this.fTable.get(machineId) +"/DistributedHashTable");
+				System.out.println( "lookup: machine " + this.myId + " - value of " + req.toString() + " routed to machine " + machineId);
 				return dhtNextMachine.lookup(req);
-			}  catch(Exception e) {
+			}catch(Exception e) {
 				System.out.println("MachineId " + this.myId + " : dhtNextMachine: " +  e.getMessage());
 			}
 		}
 		return null;
 	}
 	
-	public void delete(IRequest req){
-		int machineId = getMachineIdToInsert(req.getKey());
+	public void delete(IQueryRequest req){
+		int machineId = getMachineId(req.getKey());
 		if(machineId == this.myId){
-			System.out.println( "Machine " + this.myId + " delete: " + req.toString());
 			if(this.cache.containsKey(req.getKey())){
+				System.out.println( "delete: machine " + this.myId + " - value of " + req.toString() + " is deleted");
 				this.cache.remove(req.getKey());
+			}
+			else
+			{
+				System.out.println( "delete: machine " + this.myId + " - value of " + req.toString() + " not found");
 			}
 		}
 		else{
 			try { 
 				IDistributedHashTable dhtNextMachine = (IDistributedHashTable) 
 	    			Naming.lookup("rmi://localhost:"+ (Integer)this.fTable.get(machineId) +"/DistributedHashTable");
+				System.out.println( "delete: machine " + this.myId + " - value of " + req.toString() + " routed to machine " + machineId);
 				dhtNextMachine.delete(req);
-			}  catch(Exception e) {
+			} catch(Exception e) {
 				System.out.println("MachineId " + this.myId + " : dhtNextMachine: " +  e.getMessage());
 			}
 		}
@@ -91,10 +100,6 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
 		return this.cache.size();
 	}
 	
-	public boolean contains(IRequest req){
-		return this.cache.containsKey(req.getKey());
-	}
-	
 	private int getUpperBound(int machineId){
 		return machineId * MaxSize + 1;
 	}
@@ -103,7 +108,7 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
 		return getUpperBound(machineId) - MaxSize;
 	}
 	
-	private int getMachineIdToInsert(int key){
+	private int getMachineId(int key){
 		if(getLowerBound(myId) <= key && key <= getUpperBound(myId))
 			return myId;
 		else if(getLowerBound(getNextMachineId()) <= key && key <= getUpperBound(getNextMachineId()))
