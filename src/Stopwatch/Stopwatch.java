@@ -12,12 +12,12 @@ public class Stopwatch {
   private boolean running = false;
 
   public Stopwatch start() {
-     startTime = System.currentTimeMillis();
+     startTime = System.nanoTime();
      running = true;
      return this;
   }
   public Stopwatch stop() {
-     stopTime = System.currentTimeMillis();
+     stopTime = System.nanoTime();
      running = false;
      return this;
   }
@@ -30,7 +30,7 @@ public class Stopwatch {
         return 0;
      }
      if (running){
-     return System.currentTimeMillis() - startTime;
+     return System.nanoTime() - startTime;
      } else {
      return stopTime-startTime;
      } 
