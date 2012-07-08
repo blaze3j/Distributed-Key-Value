@@ -8,8 +8,8 @@ public class InsertRequest extends QueryRequest implements IInsertRequest{
 		this.Value = value;
 	}
 	public Object getValue(){return this.Value;}
-	public String toString() {return "Insert request " + this.getRequestId() + 
+	public String printRequest() {return "request " + this.getRequestId() + 
 			" from machine " + this.getMachineId() + 
-			" with <" + this.getKey() + "," + this.getValue() + ">";
+			" with <" + this.getKey() + " , " + this.getValue() + ">";
 	}
 }
