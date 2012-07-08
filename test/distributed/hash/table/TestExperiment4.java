@@ -41,7 +41,7 @@ public class TestExperiment4 {
      * Test method for {@link distributed.hash.table.Request#Request(int, int, int, java.lang.Object)}.
      */
     @Test
-    public void testExperiment3() {
+    public void testExperiment4() {
         int total = 0;
         int count = 0;
         for (int i = 0; i < mServerCount; i++) {
@@ -53,20 +53,13 @@ public class TestExperiment4 {
             }
         }
 
-        for (int i = 0; i < 1000; i++)
+        for (int i = 1; i <= 1000000; i++)
         {
             try {
                 int machineClientId = mRandom.nextInt(4);
                 int machineId = machineClientId + 1;
-                int key = mRandom.nextInt(1000000) + 1;
-                IQueryRequest qreq = new QueryRequest(mRequestId++, machineId, key);
-                Object value = mDhtClientArray[machineClientId].lookup(qreq);
-                if (null != value)
-                {
-                    i--;
-                    continue;
-                }
-                IInsertRequest req = new InsertRequest(mRequestId++, machineId, key, 1);
+
+                IInsertRequest req = new InsertRequest(mRequestId++, machineId, i, i);
                 mDhtClientArray[machineClientId].insert(req);
             }  catch(Exception e) {
                 e.printStackTrace();
@@ -86,7 +79,21 @@ public class TestExperiment4 {
             }
         }
         
-        assertTrue(total == 1000);
+        assertTrue(total == 1000000);
 
+        for (int i = 0; i < 1000; i++)
+        {
+            try {
+                int machineClientId = mRandom.nextInt(4);
+                int machineId = machineClientId + 1;
+                int key = mRandom.nextInt(1000000) + 1;
+                IQueryRequest req = new QueryRequest(mRequestId++, machineId, key);
+                int hops = mDhtClientArray[machineClientId].lookupTrace(req);
+                System.out.println("DHTServer[" + machineId + "] hops " + hops);
+            }  catch(Exception e) {
+                e.printStackTrace();
+                System.out.println("dhtClient: " +  e.getMessage());
+            }
+        }
     }
 }
