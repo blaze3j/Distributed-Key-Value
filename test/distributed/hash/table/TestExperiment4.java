@@ -10,15 +10,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import Stopwatch.Stopwatch;
-
-public class TestExperiment1 {
+public class TestExperiment4 {
     private final int mServerCount = 4;
     public final int[] mPortMap = {15555,15556,15557,15558};
     private IDistributedHashTable[] mDhtClientArray = null;
     private int mRequestId = 1;
     private Random mRandom = null;
-    private Stopwatch mStopwatch = null;
 
     /**
      * @throws java.lang.Exception
@@ -26,7 +23,6 @@ public class TestExperiment1 {
     @Before
     public void setUp() throws Exception {
         mRandom = new Random();
-        mStopwatch = new Stopwatch();
         mDhtClientArray = new IDistributedHashTable[mServerCount];
         for (int i = 0; i < mServerCount; i++) {
             mDhtClientArray[i] = (IDistributedHashTable) 
@@ -45,7 +41,9 @@ public class TestExperiment1 {
      * Test method for {@link distributed.hash.table.Request#Request(int, int, int, java.lang.Object)}.
      */
     @Test
-    public void testExperiement1() {
+    public void testExperiment3() {
+        int total = 0;
+        int count = 0;
         for (int i = 0; i < mServerCount; i++) {
             try {
                 mDhtClientArray[i].purge();
@@ -54,7 +52,6 @@ public class TestExperiment1 {
                 System.out.println("dhtClient: " +  e.getMessage());
             }
         }
-        mStopwatch.reset();
 
         for (int i = 0; i < 1000; i++)
         {
@@ -62,18 +59,34 @@ public class TestExperiment1 {
                 int machineClientId = mRandom.nextInt(4);
                 int machineId = machineClientId + 1;
                 int key = mRandom.nextInt(1000000) + 1;
-                IQueryRequest req = new QueryRequest(mRequestId++, machineId, key);
-
-                mStopwatch.start(); 
-                mDhtClientArray[machineClientId].lookup(req);
-                mStopwatch.stop();
-                System.out.println("DHTServer[" + machineId + "] lookup on empty took " + mStopwatch.getElapsedTime());
-
-                assertTrue(0 == mDhtClientArray[machineClientId].count());
+                IQueryRequest qreq = new QueryRequest(mRequestId++, machineId, key);
+                Object value = mDhtClientArray[machineClientId].lookup(qreq);
+                if (null != value)
+                {
+                    i--;
+                    continue;
+                }
+                IInsertRequest req = new InsertRequest(mRequestId++, machineId, key, 1);
+                mDhtClientArray[machineClientId].insert(req);
             }  catch(Exception e) {
                 e.printStackTrace();
                 System.out.println("dhtClient: " +  e.getMessage());
             }
         }
+        
+        for (int i = 0; i < mServerCount; i++) {
+            try {
+                count =  mDhtClientArray[i].count();
+                total += count;
+                System.out.println("DHTServer[" + (i + 1) + "] count " + count);
+                
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                System.out.println("dhtClient: " +  e.getMessage());
+            }
+        }
+        
+        assertTrue(total == 1000);
+
     }
 }

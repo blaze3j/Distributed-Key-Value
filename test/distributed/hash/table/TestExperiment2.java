@@ -67,7 +67,7 @@ public class TestExperiment2 {
                 mStopwatch.start(); 
                 mDhtClientArray[machineClientId].insert(req);
                 mStopwatch.stop();
-                System.out.println("DHTClient[" + machineId + "] insert on empty took " + mStopwatch.getElapsedTime());
+                System.out.println("DHTServer[" + machineId + "] insert on empty took " + mStopwatch.getElapsedTime());
 
                 mDhtClientArray[machineClientId].purge();
                 assertTrue(0 == mDhtClientArray[machineClientId].count());
