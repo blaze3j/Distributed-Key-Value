@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import Stopwatch.Stopwatch;
 
-public class TestExperiment2 {
+public class TestExperiment3 {
     private final int mServerCount = 4;
     public final int[] mPortMap = {15555,15556,15557,15558};
     private IDistributedHashTable[] mDhtClientArray = null;
