@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import Stopwatch.Stopwatch;
 
-public class TestExperiment1 {
+public class TestExperiment2 {
     private final int mServerCount = 4;
     public final int[] mPortMap = {15555,15556,15557,15558};
     private IDistributedHashTable[] mDhtClientArray = null;
@@ -45,7 +45,7 @@ public class TestExperiment1 {
      * Test method for {@link distributed.hash.table.Request#Request(int, int, int, java.lang.Object)}.
      */
     @Test
-    public void testExperiement1() {
+    public void testExperiment2() {
         for (int i = 0; i < mServerCount; i++) {
             try {
                 mDhtClientArray[i].purge();

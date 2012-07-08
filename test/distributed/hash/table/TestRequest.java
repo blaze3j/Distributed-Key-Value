@@ -3,9 +3,6 @@ package distributed.hash.table;
 import static org.junit.Assert.*;
 
 import java.rmi.Naming;
-import java.rmi.RemoteException;
-import java.util.Random;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
