@@ -87,6 +87,5 @@ public class TestExperiment3 {
         }
         
         assertTrue(total == 1000);
-
     }
 }
