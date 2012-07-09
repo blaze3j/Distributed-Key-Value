@@ -69,6 +69,7 @@ public class TestExperiment4 {
     public void testExperiment4() {
         int total = 0;
         int count = 0;
+        
         for (int i = 0; i < mServerCount; i++) {
             try {
                 mDhtClientArray[i].purge();
