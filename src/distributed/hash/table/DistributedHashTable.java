@@ -9,7 +9,7 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     private static final long serialVersionUID = 1L;
     private Hashtable<Integer, Object> cache;
     private Hashtable<Integer, Integer> fTable;
-    int myId;
+    private int myId;
 
     public DistributedHashTable(int id, Hashtable<Integer, Integer> fingerTable) throws java.rmi.RemoteException {
         super(); 
@@ -146,10 +146,7 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
         try{
             System.out.println(msg);
             req.appendMessage(msg);
-        }catch(Exception e){
-
-        }
-
+        }catch(Exception e){ }
     }
 
     private int getUpperBound(int machineId){
@@ -161,32 +158,45 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     }
 
     private int getMachineId(int key){
-        if(getLowerBound(myId) <= key && key < getUpperBound(myId))
-            return myId;
-        else if(getLowerBound(getNextMachineId()) <= key && key < getUpperBound(getNextMachineId()))
-            return getNextMachineId();
-        return getLastMachineId();
-    }
+		if(getLowerBound(myId) <= key && key < getUpperBound(myId))
+			return myId;
+		Set<Integer> set = this.fTable.keySet();
+		Iterator<Integer> itr = set.iterator();
+		while(itr.hasNext()) { 
+			int id = itr.next();
+			if(getLowerBound(id) <= key && key < getUpperBound(id))
+				return id; 
+		}
+		return getLastMachineId(key);
+	}
 
-    private int getNextMachineId(){
-        Set<Integer> set = this.fTable.keySet();
-        Iterator<Integer> itr = set.iterator();
-        int min = Integer.MAX_VALUE;
-        while(itr.hasNext()) { 
-            int id = itr.next();
-            min = Math.min(id, min);
-        }
-        return min;
-    }
-
-    private int getLastMachineId(){
-        Set<Integer> set = this.fTable.keySet();
-        Iterator<Integer> itr = set.iterator();
-        int max = Integer.MIN_VALUE;
-        while(itr.hasNext()) { 
-            int id = itr.next();
-            max = Math.max(id, max);
-        }
-        return max;
-    }
+	private int getLastMachineId(int key){
+		Set<Integer> set = this.fTable.keySet();
+		Iterator<Integer> itr = set.iterator();
+		int lastId = Integer.MIN_VALUE;
+		int lastUpperBound = Integer.MIN_VALUE;
+		boolean hasSamller = false;
+		while(itr.hasNext()) {
+			int id = itr.next();
+			int nextUpperBound = getUpperBound(id);
+			if(!hasSamller && nextUpperBound > key){
+				if(nextUpperBound > lastUpperBound){
+					lastId = id;
+					lastUpperBound = nextUpperBound;
+				}
+			}
+			else if(nextUpperBound <= key){
+				if(!hasSamller){
+					lastId = id;
+					lastUpperBound = nextUpperBound;
+					hasSamller = true;
+				}
+				else if(nextUpperBound > lastUpperBound && nextUpperBound < key){
+					lastId = id;
+					lastUpperBound = nextUpperBound;
+				}
+			}
+		}
+		return lastId;
+	}
 }

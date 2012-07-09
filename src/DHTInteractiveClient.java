@@ -1,17 +1,18 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.rmi.Naming;
-import java.rmi.RemoteException;
-import java.rmi.server.RemoteStub;
 import java.rmi.server.UnicastRemoteObject;
-
 import javax.swing.*;
 import distributed.hash.table.*;
 
 public class DHTInteractiveClient extends JFrame{
-	
-    private final int mServerCount = 4;
-    public final int[] mPortMap = {15555,15556,15557,15558};
+	private static int MaxSize = 250000;
+    private int mServerCount;
+    public int[] mPortMap;
     private IDistributedHashTable[] mDhtServerArray = null;
     private int mRequestId = 1;
 
@@ -133,6 +134,27 @@ public class DHTInteractiveClient extends JFrame{
 	}
 	
 	private void initServers(){
+		
+		try{
+			java.net.URL path = ClassLoader.getSystemResource("serverSetting.txt");	
+			FileReader fr = new FileReader (path.getFile());
+	        BufferedReader br = new BufferedReader (fr);
+	        try {
+				String[] portMap = br.readLine().split(",");
+				mServerCount = portMap.length;
+				mPortMap = new int[mServerCount];
+				for(int i = 0; i < mServerCount; i++){
+					mPortMap[i] = Integer.parseInt(portMap[i]);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+			System.exit(-1);
+		}
+		
 		mDhtServerArray = new IDistributedHashTable[mServerCount];
         for (int i = 0; i < mServerCount; i++) {
         	try{
@@ -208,7 +230,7 @@ public class DHTInteractiveClient extends JFrame{
 
 	private void sendPurgeRequest()
 	{
-		for(int i = 0; i < 4; i ++){
+		for(int i = 0; i < mServerCount; i ++){
 			if(mDhtServerArray[i] != null){
 				try {
 					mDhtServerArray[i].purge();
@@ -222,12 +244,10 @@ public class DHTInteractiveClient extends JFrame{
 		}
 	}
 	
-	
 	private void appendOutput(String msg){
 		resultArea.append(msg + "\n");
 		resultArea.append("             ******************************\n");
 	}
-	
 	
 	class RadioListener implements ActionListener { 
         public void actionPerformed(ActionEvent e) {
@@ -306,7 +326,7 @@ public class DHTInteractiveClient extends JFrame{
     			JOptionPane.showMessageDialog(null, "Please insert server id");
     			return false;
     		}
-        	if(Integer.parseInt(server) < 1 || Integer.parseInt(server) > 4){
+        	if(Integer.parseInt(server) < 1 || Integer.parseInt(server) > mServerCount){
         		JOptionPane.showMessageDialog(null, "Server is not in range");
         		return false;
         	}
@@ -319,7 +339,7 @@ public class DHTInteractiveClient extends JFrame{
     			JOptionPane.showMessageDialog(null, "Please insert key");
     			return false;
     		}
-        	if(Integer.parseInt(key) < 1 || Integer.parseInt(key) > 1000000){
+        	if(Integer.parseInt(key) < 1 || Integer.parseInt(key) > mServerCount * MaxSize){
         		JOptionPane.showMessageDialog(null, "Key is not in range");
         		return false;
         	}
@@ -340,9 +360,7 @@ public class DHTInteractiveClient extends JFrame{
 		initComponents();
 		initServers();
     }
-	/**
-	 * @param args
-	 */
+
 	public static void main(String[] args) {
 		final DHTInteractiveClient dhtClient = new DHTInteractiveClient();
 				
@@ -353,5 +371,4 @@ public class DHTInteractiveClient extends JFrame{
         });
 
 	}
-
 }

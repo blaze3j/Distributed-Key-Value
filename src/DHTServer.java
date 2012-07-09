@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
@@ -10,12 +15,14 @@ import distributed.hash.table.DistributedHashTable;
 
 public class DHTServer {
 	
-	public static int[] sPortMap = {15555,15556,15557,15558};
+    private static int mServerCount;
+	private static int[] sPortMap;
+	private static int[] sPeertMap;
+	private static int serverId;
 	public static void main(String[] args) {
-	    GetOpt getopt = new GetOpt(args, "i:p:g:");
-		int serverId = -1;
-		int peerId1 = -1;
-		int peerId2 = -1;
+
+	    GetOpt getopt = new GetOpt(args, "i:");
+		serverId = -1;
 		try {
 			int c;
 			while ((c = getopt.getNextOption()) != -1) {
@@ -23,17 +30,42 @@ public class DHTServer {
 			    case 'i':
 			    	serverId = Integer.parseInt(getopt.getOptionArg());
 			        break;
-			    case 'p':
-			    	peerId1 = Integer.parseInt(getopt.getOptionArg());
-			        break;
-			    case 'g':
-			    	peerId2 = Integer.parseInt(getopt.getOptionArg());
-			        break;
 			    }
 			}
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+		
+		try{
+			java.net.URL path = ClassLoader.getSystemResource("serverSetting.txt");	
+			FileReader fr = new FileReader (path.getFile());
+	        BufferedReader br = new BufferedReader (fr);
+	        String line;
+	        try {
+				String[] portMap = br.readLine().split(",");
+				mServerCount = portMap.length;
+				sPortMap = new int[mServerCount];
+				for(int i = 0; i < mServerCount; i++){
+					sPortMap[i] = Integer.parseInt(portMap[i]);
+				}
+				while ((line = br.readLine()) != null){
+					String[] machineIds = line.split(",");				
+					if(Integer.parseInt(machineIds[0]) == serverId){
+						int idCount = machineIds.length;
+						sPeertMap = new int[idCount - 1];
+						for(int i = 0; i < idCount-1; i++){
+							sPeertMap[i] = Integer.parseInt(machineIds[i+1]);
+						}
+						break;
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+			System.exit(-1);
 		}
 		
 		if (System.getSecurityManager() == null) {
@@ -51,8 +83,8 @@ public class DHTServer {
 			System.out.println("java RMI registry already exists.");
 		}
 		Hashtable<Integer, Integer> fingerTable = new Hashtable<Integer, Integer>();
-		fingerTable.put(peerId1, sPortMap[(peerId1-1)%4]);
-		fingerTable.put(peerId2, sPortMap[(peerId2-1)%4]);
+		for(int i = 0; i < sPeertMap.length; i++)
+			fingerTable.put(sPeertMap[i], sPortMap[(sPeertMap[i]-1) % mServerCount]);
 		try{
 			DistributedHashTable dhtServer = new DistributedHashTable(serverId, fingerTable);
 			Naming.rebind("//localhost:"+serverPort+"/DistributedHashTable", dhtServer);
