@@ -253,24 +253,24 @@ public class DHTInteractiveClient extends JFrame{
         public void actionPerformed(ActionEvent e) {
         	String action = e.getActionCommand();
         	if(action == "insert"){
-        		valueBox.enable(true);
-        		keyBox.enable(true);
+        		valueBox.setEnabled(true);
+        		keyBox.setEnabled(true);
         	}
         	else if(action == "lookup"){
         		valueBox.setText("");
-        		valueBox.enable(false);
-        		keyBox.enable(true);
+        		valueBox.setEnabled(false);
+        		keyBox.setEnabled(true);
         	}
         	else if(action == "delete"){
         		valueBox.setText("");
-        		valueBox.enable(false);
-        		keyBox.enable(true);
+        		valueBox.setEnabled(false);
+        		keyBox.setEnabled(true);
         	}
         	else if(action == "count"){
         		valueBox.setText("");
         		keyBox.setText("");
-        		valueBox.enable(false);
-        		keyBox.enable(false);
+        		valueBox.setEnabled(false);
+        		keyBox.setEnabled(false);
         	}
         }
 	}
