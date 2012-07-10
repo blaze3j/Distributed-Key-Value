@@ -2,6 +2,10 @@ package distributed.hash.table;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.Random;
@@ -17,9 +21,31 @@ class ClientThread extends Thread {
     private int mMinRange = 0;
     private int mMaxRange = 0;
     private int mMachineId = 0;
-    private final int[] mPortMap = {15555,15556,15557,15558};
+    private int mServerCount;
+    private int[] mPortMap;
     
     public ClientThread(int machineId, int minRange, int maxRange) throws Exception{
+    	
+    	try{
+			java.net.URL path = ClassLoader.getSystemResource("serverSetting.txt");	
+			FileReader fr = new FileReader (path.getFile());
+	        BufferedReader br = new BufferedReader (fr);
+	        try {
+				String[] portMap = br.readLine().split(",");
+				mServerCount = portMap.length;
+				mPortMap = new int[mServerCount];
+				for(int i = 0; i < mServerCount; i++){
+					mPortMap[i] = Integer.parseInt(portMap[i]);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+			System.exit(-1);
+		}
+    	
         mDhtClient = (IDistributedHashTable) 
             Naming.lookup("rmi://localhost:" + mPortMap[(machineId - 1)] + "/DistributedHashTable");
         mMinRange = minRange;
@@ -40,23 +66,14 @@ class ClientThread extends Thread {
     }
 }
 
-public class TestConcurrency {
-    private final int mServerCount = 4;
-    public final int[] mPortMap = {15555,15556,15557,15558};
-    private IDistributedHashTable[] mDhtClientArray = null;
+public class TestConcurrency extends TestExperiment{
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        new Random();
-        new Stopwatch();
-        mDhtClientArray = new IDistributedHashTable[mServerCount];
-        for (int i = 0; i < mServerCount; i++) {
-            mDhtClientArray[i] = (IDistributedHashTable) 
-            Naming.lookup("rmi://localhost:" + mPortMap[i] + "/DistributedHashTable");
-        }
+    	super.setUp();
     }
 
     /**
@@ -64,6 +81,7 @@ public class TestConcurrency {
      */
     @After
     public void tearDown() throws Exception {
+    	super.tearDown();
     }
 
     /**
