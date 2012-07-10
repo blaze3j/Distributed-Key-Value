@@ -2,19 +2,30 @@ package distributed.hash.table;
 
 import static org.junit.Assert.assertTrue;
 
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.Random;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestConcurrency extends TestExperiment{
+public class TestConcurrencyExperiment2 {
+    private final int mServerCount = 4;
+    public final int[] mPortMap = {15555,15556,15557,15558};
+    private IDistributedHashTable[] mDhtClientArray = null;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-    	super.setUp();
+        new Random();
+        mDhtClientArray = new IDistributedHashTable[mServerCount];
+        for (int i = 0; i < mServerCount; i++) {
+            mDhtClientArray[i] = (IDistributedHashTable) 
+            Naming.lookup("rmi://localhost:" + mPortMap[i] + "/DistributedHashTable");
+        }
     }
 
     /**
@@ -22,7 +33,6 @@ public class TestConcurrency extends TestExperiment{
      */
     @After
     public void tearDown() throws Exception {
-    	super.tearDown();
     }
 
     /**
@@ -31,7 +41,6 @@ public class TestConcurrency extends TestExperiment{
     @Test
     public void testConcurrency1() {
         final int clientThreadCount = 5;
-        final int machineId = 1;
         int total = 0;
         int count = 0;
 
@@ -44,11 +53,11 @@ public class TestConcurrency extends TestExperiment{
             }
         }
 
-        ClientThread[] clientThreadArray = new ClientThread[clientThreadCount];
+        ClientThreadExperiment1[] clientThreadArray = new ClientThreadExperiment1[clientThreadCount];
         
         for (int i = 0; i < clientThreadCount; i++) {
             try {
-                clientThreadArray[i] = new ClientThread(machineId, i * 1000 + 1, (i + 1) * 1000 + 1);
+                clientThreadArray[i] = new ClientThreadExperiment1(i, i * 1000 + 1, (i + 1) * 1000 + 1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -75,6 +84,6 @@ public class TestConcurrency extends TestExperiment{
             }
         }
         
-        assertTrue(total == 1000 * clientThreadCount);
+        assertTrue(total == 0);
     }
 }
