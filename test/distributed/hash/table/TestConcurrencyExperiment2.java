@@ -39,9 +39,8 @@ public class TestConcurrencyExperiment2 {
      * Test method for {@link distributed.hash.table.Request#Request(int, int, int, java.lang.Object)}.
      */
     @Test
-    public void testConcurrency1() {
+    public void testConcurrencyExperiment2() {
         final int clientThreadCount = 5;
-        int total = 0;
         int count = 0;
 
         for (int i = 0; i < mServerCount; i++) {
@@ -53,11 +52,11 @@ public class TestConcurrencyExperiment2 {
             }
         }
 
-        ClientThreadExperiment1[] clientThreadArray = new ClientThreadExperiment1[clientThreadCount];
+        ClientThreadExperiment2[] clientThreadArray = new ClientThreadExperiment2[clientThreadCount];
         
         for (int i = 0; i < clientThreadCount; i++) {
             try {
-                clientThreadArray[i] = new ClientThreadExperiment1(i, i * 1000 + 1, (i + 1) * 1000 + 1);
+                clientThreadArray[i] = new ClientThreadExperiment2(i, i * 1000 + 1, (i + 1) * 1000 + 1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -75,15 +74,12 @@ public class TestConcurrencyExperiment2 {
         for (int i = 0; i < mServerCount; i++) {
             try {
                 count =  mDhtClientArray[i].count();
-                total += count;
                 System.out.println("DHTServer[" + (i + 1) + "] count " + count);
-                
+                assertTrue(count != 0);
             } catch (RemoteException e) {
                 e.printStackTrace();
                 System.out.println("dhtClient: " +  e.getMessage());
             }
         }
-        
-        assertTrue(total == 0);
     }
 }
