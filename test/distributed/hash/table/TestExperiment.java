@@ -11,6 +11,9 @@ import org.junit.After;
 
 import Stopwatch.Stopwatch;
 
+/** 
+ * JUnit test to set up clients for distributed hash table 
+ */
 public abstract class TestExperiment {
 	
 	protected int mServerCount;
@@ -24,7 +27,7 @@ public abstract class TestExperiment {
         mRandom = new Random();
         mStopwatch = new Stopwatch();		
 		try{
-			java.net.URL path = ClassLoader.getSystemResource("serverSetting.txt");	
+			java.net.URL path = ClassLoader.getSystemResource("clientSetting4.txt");	
 			FileReader fr = new FileReader (path.getFile());
 	        BufferedReader br = new BufferedReader (fr);
 	        try {

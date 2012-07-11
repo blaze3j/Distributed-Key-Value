@@ -1,5 +1,8 @@
 package distributed.hash.table;
 
+/** 
+ * Implementation of RMI query request
+ */
 public class QueryRequest implements IQueryRequest{
 	private static final long serialVersionUID = 1L;
 	private int RequestId;

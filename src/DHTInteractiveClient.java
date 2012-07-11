@@ -7,14 +7,18 @@ import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.server.UnicastRemoteObject;
 import javax.swing.*;
+import com.sun.org.apache.xalan.internal.xsltc.cmdline.getopt.GetOpt;
+
 import distributed.hash.table.*;
 
+// Interactive Client application for Distributed hash table
 public class DHTInteractiveClient extends JFrame{
 	private static int MaxSize = 250000;
     private int mServerCount;
     public int[] mPortMap;
     private IDistributedHashTable[] mDhtServerArray = null;
     private int mRequestId = 1;
+    private String clientSettingFile;
 
 	private static final long serialVersionUID = 1L;
 	private JTextField keyBox;
@@ -36,6 +40,12 @@ public class DHTInteractiveClient extends JFrame{
 	private JRadioButton countRadionButton;
     private ButtonGroup actionGroup;
 
+    // Constructor
+	public DHTInteractiveClient(String settingFile) {
+		this.clientSettingFile = settingFile;
+	}
+
+	// initialize client UI
 	private void initComponents(){
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Distributed Hash Table Client");
@@ -133,10 +143,11 @@ public class DHTInteractiveClient extends JFrame{
         this.setVisible(true);
 	}
 	
+	// initialize data hash table servers
 	private void initServers(){
 		
 		try{
-			java.net.URL path = ClassLoader.getSystemResource("serverSetting.txt");	
+			java.net.URL path = ClassLoader.getSystemResource(clientSettingFile);	
 			FileReader fr = new FileReader (path.getFile());
 	        BufferedReader br = new BufferedReader (fr);
 	        try {
@@ -160,13 +171,15 @@ public class DHTInteractiveClient extends JFrame{
         	try{
             mDhtServerArray[i] = (IDistributedHashTable) 
             Naming.lookup("rmi://localhost:" + mPortMap[i] + "/DistributedHashTable");
+    		appendOutput("server: " + (i+1) + " is connected");
         	}catch(Exception e) {
         		appendOutput("initServers: " + (i+1) + " " +  e.getMessage());
         	}
         }
 	}
 	
-	private void sendInsertRequest(int key, Object value,  int server)
+	// send an insert request to a server
+	private void sendInsertRequest(int key, Object value, int server)
 	{
 		IInsertRequest insReq = new InsertRequest(mRequestId++, server, key, value);
 		try {
@@ -182,6 +195,7 @@ public class DHTInteractiveClient extends JFrame{
 		}
 	}
 	
+	// send a delete request to a server
 	private void sendDeleteRequest(int key, int server)
 	{
 		IQueryRequest queryReq = new QueryRequest(mRequestId++, server, key);
@@ -198,6 +212,7 @@ public class DHTInteractiveClient extends JFrame{
 		}
 	}
 	
+	// send a lookup request to a server
 	private void sendLookupRequest(int key, int server)
 	{
 		IQueryRequest queryReq = new QueryRequest(mRequestId++, server, key);
@@ -214,6 +229,7 @@ public class DHTInteractiveClient extends JFrame{
 		}
 	}
 	
+	// send a count request to a server
 	private void sendCountRequest(int server)
 	{
 		try {
@@ -228,6 +244,7 @@ public class DHTInteractiveClient extends JFrame{
 		}
 	}
 
+	// send a purge request to a server
 	private void sendPurgeRequest()
 	{
 		for(int i = 0; i < mServerCount; i ++){
@@ -244,11 +261,13 @@ public class DHTInteractiveClient extends JFrame{
 		}
 	}
 	
+	// append string to the output text area
 	private void appendOutput(String msg){
 		resultArea.append(msg + "\n");
 		resultArea.append("             ******************************\n");
 	}
 	
+	// radio button listener
 	class RadioListener implements ActionListener { 
         public void actionPerformed(ActionEvent e) {
         	String action = e.getActionCommand();
@@ -275,6 +294,7 @@ public class DHTInteractiveClient extends JFrame{
         }
 	}
 	
+	// execute button listener
 	class ExecButtonListener implements ActionListener { 
         public void actionPerformed(ActionEvent e) {
         	String action = actionGroup.getSelection().getActionCommand();
@@ -347,6 +367,7 @@ public class DHTInteractiveClient extends JFrame{
         }
 	}
 	
+	// purge button listener
 	class PurgeButtonListener implements ActionListener { 
         public void actionPerformed(ActionEvent e) {
         	if(JOptionPane.showConfirmDialog(null, "Are you sure to purge distributed hash table?", "Purge",
@@ -362,7 +383,22 @@ public class DHTInteractiveClient extends JFrame{
     }
 
 	public static void main(String[] args) {
-		final DHTInteractiveClient dhtClient = new DHTInteractiveClient();
+		String clientSettingFile = "";
+		GetOpt getopt = new GetOpt(args, "f:");
+		try {
+			int c;
+			while ((c = getopt.getNextOption()) != -1) {
+			    switch(c) {
+			    case 'f':
+			    	clientSettingFile = getopt.getOptionArg();
+			        break;
+			    }
+			    
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		final DHTInteractiveClient dhtClient = new DHTInteractiveClient(clientSettingFile);
 				
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {

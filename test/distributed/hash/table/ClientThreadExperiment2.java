@@ -24,7 +24,7 @@ class ClientThreadExperiment2 extends Thread {
     public ClientThreadExperiment2(int identifier, int minRange, int maxRange) throws Exception{
         
         try{
-            java.net.URL path = ClassLoader.getSystemResource("serverSetting.txt"); 
+            java.net.URL path = ClassLoader.getSystemResource("clientSetting4.txt"); 
             FileReader fr = new FileReader (path.getFile());
             BufferedReader br = new BufferedReader (fr);
             try {

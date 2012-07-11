@@ -1,14 +1,11 @@
 package distributed.hash.table;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-
-import distributed.hash.table.IDistributedHashTable;
-import distributed.hash.table.IInsertRequest;
-import distributed.hash.table.InsertRequest;
 
 class ClientThread extends Thread {
     private IDistributedHashTable mDhtClient = null;
@@ -21,7 +18,7 @@ class ClientThread extends Thread {
     public ClientThread(int machineId, int minRange, int maxRange) throws Exception{
         
         try{
-            java.net.URL path = ClassLoader.getSystemResource("serverSetting.txt"); 
+            java.net.URL path = ClassLoader.getSystemResource("clientSetting4.txt"); 
             FileReader fr = new FileReader (path.getFile());
             BufferedReader br = new BufferedReader (fr);
             try {

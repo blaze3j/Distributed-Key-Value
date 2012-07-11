@@ -2,6 +2,9 @@ package distributed.hash.table;
 
 import java.rmi.Remote;
 
+/** 
+ * Interface RMI of query request
+ */
 public interface IQueryRequest extends java.io.Serializable, Remote{
 	public int getKey() 
 			throws java.rmi.RemoteException;

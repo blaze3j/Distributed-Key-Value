@@ -1,5 +1,8 @@
 package distributed.hash.table;
 
+/** 
+ * Implementation of RMI insert request
+ */
 public class InsertRequest extends QueryRequest implements IInsertRequest{
 	private static final long serialVersionUID = 1L;
 	Object Value; 

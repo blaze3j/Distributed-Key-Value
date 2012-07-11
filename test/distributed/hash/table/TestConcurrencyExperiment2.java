@@ -2,30 +2,20 @@ package distributed.hash.table;
 
 import static org.junit.Assert.assertTrue;
 
-import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestConcurrencyExperiment2 {
-    private final int mServerCount = 4;
-    public final int[] mPortMap = {15555,15556,15557,15558};
-    private IDistributedHashTable[] mDhtClientArray = null;
-
+public class TestConcurrencyExperiment2  extends TestExperiment {
+    
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        new Random();
-        mDhtClientArray = new IDistributedHashTable[mServerCount];
-        for (int i = 0; i < mServerCount; i++) {
-            mDhtClientArray[i] = (IDistributedHashTable) 
-            Naming.lookup("rmi://localhost:" + mPortMap[i] + "/DistributedHashTable");
-        }
+    	super.setUp();
     }
 
     /**
@@ -33,6 +23,7 @@ public class TestConcurrencyExperiment2 {
      */
     @After
     public void tearDown() throws Exception {
+    	super.tearDown();
     }
 
     /**

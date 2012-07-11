@@ -8,8 +8,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/** 
+ * JUnit test to test distributed hash table functions 
+ */
 public class TestExperiment4 extends TestExperiment{
-
+	
 	/**
      * @throws java.lang.Exception
      */

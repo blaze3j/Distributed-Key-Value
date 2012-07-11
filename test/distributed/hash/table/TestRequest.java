@@ -5,8 +5,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/** 
+ * JUnit test to distributed hash table functions 
+ */
 public class TestRequest extends TestExperiment {
-   
+	
     /**
      * @throws java.lang.Exception
      */
