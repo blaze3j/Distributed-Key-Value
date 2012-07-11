@@ -65,15 +65,27 @@ class ClientThreadExperiment2 extends Thread {
             int machineClientId = mRandom.nextInt(mServerCount);
             int machineId = machineClientId + 1;
             int key = mRandom.nextInt(1000000) + 1;
-            IQueryRequest req = new QueryRequest(i, machineId, key);
+//            Object value = null;
+//            do {
+//                key = mRandom.nextInt(1000000) + 1;
+//                IQueryRequest req = new QueryRequest(i, machineId, key);
+//                try {
+//                    value = mDhtClientArray[machineClientId].lookup(req);
+//                } catch (RemoteException e) {
+//                    e.printStackTrace();
+//                }
+//            } while (null != value);
+            
+            IInsertRequest req = new InsertRequest(i, machineId, key, key);
             try {
                 mStopwatch.start(); 
-                mDhtClientArray[machineClientId].lookup(req);
+                mDhtClientArray[machineClientId].insert(req);
                 mStopwatch.stop();
-                System.out.println("Thread[" + mIdentifier + "] DHTServer[" + machineId + "] lookup on empty took " + mStopwatch.getElapsedTime());
+                System.out.println("Thread[" + mIdentifier + "] DHTServer[" + machineId + "] insert took " + mStopwatch.getElapsedTime());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            
         }
     }
 }
