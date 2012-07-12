@@ -30,7 +30,7 @@ public class TestExperiment1 extends TestExperiment {
     }
     
     /**
-     * Test method for perfomring 1000 random key lookups when system is empty.
+     * Test method for performing 1000 random key lookups when system is empty.
      */
     @Test
     public void testExperiement1() {

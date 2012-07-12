@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 
+
+/** 
+ * Client thread that send request to a server for testing purpose 
+ */
 class ClientThread extends Thread {
     private IDistributedHashTable mDhtClient = null;
     private int mMinRange = 0;
@@ -15,6 +19,9 @@ class ClientThread extends Thread {
     private int mServerCount;
     private int[] mPortMap;
     
+    /** 
+     * Constructor
+     */
     public ClientThread(int machineId, int minRange, int maxRange) throws Exception{
         
         try{

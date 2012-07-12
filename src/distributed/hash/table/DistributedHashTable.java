@@ -34,7 +34,9 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     }
     
     /** 
-     * insert an entity on this server or send the request to the next server if it is not in this server
+     * insert an entity on the local hash table if it in the range of this machine,
+     * or send the request to the next server that key belongs to if it is not in this server.
+     * if next server can not be located, send it to the last server
      */
     public void insert(IInsertRequest req) throws RemoteException{
         if(isKeyInThisMachine(req.getKey())){
@@ -57,7 +59,9 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     }
 
     /** 
-     * lookup an entity on this server or send the request to the next server if it is not in this server
+     * insert an entity on the local hash table if it in the range of this machine,
+     * or send the request to the next server that key belongs to if it is not in this server.
+     * if next server can not be located, send it to the last server
      */
     public Object lookup(IQueryRequest req) throws RemoteException{
     	if(isKeyInThisMachine(req.getKey())){
@@ -88,7 +92,9 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     }
 
     /** 
-     * lookup and trace an entity on this server or send the request to the next server if it is not in this server
+     * lookup and trace an entity on the local hash table if it in the range of this machine,
+     * or send the request to the next server that key belongs to if it is not in this server.
+     * if next server can not be located, send it to the last server
      */
     public int lookupTrace(IQueryRequest req) throws RemoteException{
     	if(isKeyInThisMachine(req.getKey())){
@@ -118,7 +124,9 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     }
 
     /** 
-     * delete an entity on this server or send the request to the next server if it is not in this server
+     * delete an entity on the local hash table if it in the range of this machine,
+     * or send the request to the next server that key belongs to if it is not in this server.
+     * if next server can not be located, send it to the last server
      */
     public void delete(IQueryRequest req) throws RemoteException{
     	if(isKeyInThisMachine(req.getKey())){
@@ -146,7 +154,7 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     }
 
     /** 
-     * purge hash table
+     * purge local hash table
      */
     public void purge(){
         synchronized(this.cache) {
@@ -156,7 +164,7 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     }
 
     /** 
-     * return number of keys store in the server
+     * return number of keys store in the local hash table
      */
     public int count(){
         synchronized(this.cache) {
@@ -177,7 +185,7 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     }
     
     /** 
-     * check if the key is stored in this machine
+     * check if the key is stored in this local hash table
      */
     private boolean isKeyInThisMachine(int key){
     	return this.startKey <= key && key < (this.startKey + this.keySize);
@@ -185,6 +193,7 @@ public class DistributedHashTable extends java.rmi.server.UnicastRemoteObject im
     
     /** 
      * find the next machine from successor table for a key
+     * if next machine is not found, return the last server in the successor table
      */  
 	private String getNextMachineAddress(int key){
 		Set<Map.Entry<String, Integer>> successors = this.successorTable.entrySet();

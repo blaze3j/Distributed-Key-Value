@@ -7,6 +7,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/** 
+ * Testing the concurrent request to multi servers
+ */
 public class TestConcurrency extends TestExperiment{
 
     /**
@@ -46,6 +49,7 @@ public class TestConcurrency extends TestExperiment{
 
         ClientThread[] clientThreadArray = new ClientThread[clientThreadCount];
         
+        // create and run client threads
         for (int i = 0; i < clientThreadCount; i++) {
             try {
                 clientThreadArray[i] = new ClientThread(machineId, i * 1000 + 1, (i + 1) * 1000 + 1);
@@ -63,6 +67,7 @@ public class TestConcurrency extends TestExperiment{
             }
         }
         
+        // client threads are done, get the count on each server
         for (int i = 0; i < mServerCount; i++) {
             try {
                 count =  mDhtClientArray[i].count();

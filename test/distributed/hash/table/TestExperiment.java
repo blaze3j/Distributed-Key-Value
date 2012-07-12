@@ -12,7 +12,7 @@ import org.junit.After;
 import Stopwatch.Stopwatch;
 
 /** 
- * JUnit test to set up clients for distributed hash table 
+ * base class to set up clients for distributed hash table 
  */
 public abstract class TestExperiment {
 	

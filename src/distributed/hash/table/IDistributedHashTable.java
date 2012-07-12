@@ -2,7 +2,9 @@ package distributed.hash.table;
 
 import java.rmi.Remote;
 
-// Interface RMI of distributed hash table 
+/** Interface RMI of distributed hash table
+ *  
+ */
 public interface IDistributedHashTable extends Remote {
 	
 	public int count() 

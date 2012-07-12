@@ -144,6 +144,7 @@ public class DHTInteractiveClient extends JFrame{
 	}
 	
 	// initialize data hash table servers
+	// read server addresses from file and initialize the servers
 	private void initServers(){
 		
 		try{
@@ -179,6 +180,8 @@ public class DHTInteractiveClient extends JFrame{
 	}
 	
 	// send an insert request to a server
+	// 1 < key < max key number
+	// server: id of server to insert the key
 	private void sendInsertRequest(int key, Object value, int server)
 	{
 		IInsertRequest insReq = new InsertRequest(mRequestId++, server, key, value);
@@ -196,6 +199,8 @@ public class DHTInteractiveClient extends JFrame{
 	}
 	
 	// send a delete request to a server
+	// 1 < key < max key number
+	// server: id of server to delete the key
 	private void sendDeleteRequest(int key, int server)
 	{
 		IQueryRequest queryReq = new QueryRequest(mRequestId++, server, key);
@@ -213,6 +218,8 @@ public class DHTInteractiveClient extends JFrame{
 	}
 	
 	// send a lookup request to a server
+	// 1 < key < max key number
+	// server: id of server to lookup the key
 	private void sendLookupRequest(int key, int server)
 	{
 		IQueryRequest queryReq = new QueryRequest(mRequestId++, server, key);
@@ -230,6 +237,8 @@ public class DHTInteractiveClient extends JFrame{
 	}
 	
 	// send a count request to a server
+	// 1 < key < max key number
+	// server: id of server to count the number of entities
 	private void sendCountRequest(int server)
 	{
 		try {
@@ -245,6 +254,8 @@ public class DHTInteractiveClient extends JFrame{
 	}
 
 	// send a purge request to a server
+	// 1 < key < max key number
+	// server: id of server to purge data
 	private void sendPurgeRequest()
 	{
 		for(int i = 0; i < mServerCount; i ++){
