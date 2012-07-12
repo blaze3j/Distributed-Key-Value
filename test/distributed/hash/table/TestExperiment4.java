@@ -30,7 +30,8 @@ public class TestExperiment4 extends TestExperiment{
     }
 	
     /**
-     * Test method for {@link distributed.hash.table.Request#Request(int, int, int, java.lang.Object)}.
+     * Test method for validating 1000000 and collect overhead information 
+     * on random lookups
      */
     @Test
     public void testExperiment4() {

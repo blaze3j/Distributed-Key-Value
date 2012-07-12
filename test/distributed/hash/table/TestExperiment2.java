@@ -30,7 +30,7 @@ public class TestExperiment2 extends TestExperiment {
     }
     
     /**
-     * Test method for {@link distributed.hash.table.Request#Request(int, int, int, java.lang.Object)}.
+     * Test method for performing 1000 random insertions when system is empty.
      */
     @Test
     public void testExperiment2() {

@@ -11,6 +11,9 @@ import Stopwatch.Stopwatch;
 
 import distributed.hash.table.IDistributedHashTable;
 
+/** 
+ *  Helper class for spawning threads for lookup on empty
+ */
 class ClientThreadExperiment1 extends Thread {
     protected IDistributedHashTable[] mDhtClientArray = null;
     private int mMinRange = 0;

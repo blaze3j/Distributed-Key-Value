@@ -11,6 +11,9 @@ import Stopwatch.Stopwatch;
 
 import distributed.hash.table.IDistributedHashTable;
 
+/** 
+ *  Helper class for spawning threads for insertion
+ */
 class ClientThreadExperiment2 extends Thread {
     protected IDistributedHashTable[] mDhtClientArray = null;
     private int mMinRange = 0;
@@ -65,16 +68,6 @@ class ClientThreadExperiment2 extends Thread {
             int machineClientId = mRandom.nextInt(mServerCount);
             int machineId = machineClientId + 1;
             int key = mRandom.nextInt(1000000) + 1;
-//            Object value = null;
-//            do {
-//                key = mRandom.nextInt(1000000) + 1;
-//                IQueryRequest req = new QueryRequest(i, machineId, key);
-//                try {
-//                    value = mDhtClientArray[machineClientId].lookup(req);
-//                } catch (RemoteException e) {
-//                    e.printStackTrace();
-//                }
-//            } while (null != value);
             
             IInsertRequest req = new InsertRequest(i, machineId, key, key);
             try {

@@ -31,7 +31,7 @@ public class TestExperiment3 extends TestExperiment {
 
 
     /**
-     * Test method for {@link distributed.hash.table.Request#Request(int, int, int, java.lang.Object)}.
+     * Test method for checking the storage load after 1000 random insertions
      */
     @Test
     public void testExperiment3() {

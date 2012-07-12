@@ -27,7 +27,7 @@ public class TestConcurrencyExperiment2  extends TestExperiment {
     }
 
     /**
-     * Test method for {@link distributed.hash.table.Request#Request(int, int, int, java.lang.Object)}.
+     * Test method for 5x client threads doing 1000x insertions.
      */
     @Test
     public void testConcurrencyExperiment2() {
